@@ -1,14 +1,37 @@
-pipeline
-  environment
+pipeline {
+  environment {
     registry = "minkov/hello-world-app"
     registryCredential = 'docker'
+    dockerImage = ''
+  }
   agent any
-  stages
-    stage('Building image')
-      steps
-        script
-          docker.build registry + ":$BUILD_NUMBER"
-    stage 'Checkout'
-        checkout scm
-    stage 'Build & UnitTest'
-        sh "docker build -t hello-world:B${BUILD_NUMBER} -f Dockerfile ."
+  tools {nodejs "node" }
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/Minkov/hello-world-node-docker.git'
+      }
+    }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+        }
+      }
+    }
+    stage('Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $registry:$BUILD_NUMBER"
+      }
+    }
+  }
+}
