@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  app:
+    build:
+      context: .
+    image: hello-world-app
+    ports:
+      - "8000:8000"
+    container_name: hello-world-app-instance
+    restart: on-failure
