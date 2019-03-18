@@ -1,10 +1,9 @@
-pipeline {
-  environment {
+pipeline
+  environment
     registry = "minkov/hello-world-app"
     registryCredential = 'docker'
-  }
   agent any
-  stages {
+  stages
     stage('Building image')
       steps
         script
@@ -13,5 +12,3 @@ pipeline {
         checkout scm
     stage 'Build & UnitTest'
         sh "docker build -t hello-world:B${BUILD_NUMBER} -f Dockerfile ."
- ` }
-}
