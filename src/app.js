@@ -21,4 +21,7 @@ app.post('/', (req, res) => {
         .send(item);
 });
 
+<<<<<<< HEAD
 console.log('It works!');
+=======
+>>>>>>> 882a4187d69d5e26d798357ad4c7a8312ea5a49d
